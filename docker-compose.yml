@@ -1,0 +1,74 @@
+app:
+  build: .
+  command: npm start
+  volumes:
+    - ./artifacts:/usr/src/app/artifacts
+  ports:
+    - "3000:3000"
+  environment:
+    - CODECLIMATE_REPO_TOKEN
+    - RELEASE_ENVIRONMENT
+    - INTEGRATION_TESTS_AWS_ACCESS_KEY_ID
+    - INTEGRATION_TESTS_AWS_SECRET_ACCESS_KEY
+    - INTEGRATION_TESTS_AWS_DEFAULT_REGION
+    - STAGING_APP_NAME
+    - STAGING_ASSET_PATH
+    - STAGING_S3_BUCKET
+    - STAGING_S3_LOCK_BUCKET
+    - STAGING_S3_IMAGE_BUCKET
+    - STAGING_S3_URL
+    - STAGING_MESSAGE_AVAILABLE_SNS_TOPIC_ARN
+    - STAGING_ERROR_QUEUE_URL
+    - STAGING_EDH_API_URL
+    - STAGING_EDH_API_TOKEN
+    - STAGING_MANDRILL_API_KEY
+    - STAGING_SENTRY_DSN
+    - STAGING_STATSD_HOST
+    - STAGING_LITMUS_USERNAME
+    - STAGING_LITMUS_PASSWORD
+    - STAGING_LITMUS_CLIENTS
+    - PRODUCTION_APP_NAME
+    - PRODUCTION_ASSET_PATH
+    - PRODUCTION_S3_BUCKET
+    - PRODUCTION_S3_LOCK_BUCKET
+    - PRODUCTION_S3_IMAGE_BUCKET
+    - PRODUCTION_S3_URL
+    - PRODUCTION_MESSAGE_AVAILABLE_SNS_TOPIC_ARN
+    - PRODUCTION_ERROR_QUEUE_URL
+    - PRODUCTION_EDH_API_URL
+    - PRODUCTION_EDH_API_TOKEN
+    - PRODUCTION_MANDRILL_API_KEY
+    - PRODUCTION_SENTRY_DSN
+    - PRODUCTION_STATSD_HOST
+    - PRODUCTION_LITMUS_USERNAME
+    - PRODUCTION_LITMUS_PASSWORD
+    - PRODUCTION_LITMUS_CLIENTS
+
+statsd:
+  image: shakr/statsd-influxdb
+  ports:
+    - "8125:8125/udp"
+  environment:
+    - INFLUXDB_HOST=influxdb
+    - INFLUXDB_DATABASE=grafana
+    - INFLUXDB_USERNAME=root
+    - INFLUXDB_PASSWORD=root
+    - STATSD_DEBUG=true
+  links:
+    - influxdb
+
+influxdb:
+  image: tutum/influxdb:0.8.8
+  ports:
+    - "8083:8083"
+    - "8086:8086"
+    - "8090:8090"
+  environment:
+    - PRE_CREATE_DB=grafana
+
+grafana:
+  image: grafana/grafana:2.5.0
+  ports:
+    - "3001:3000"
+  links:
+    - influxdb

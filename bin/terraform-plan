@@ -1,0 +1,17 @@
+#!/bin/bash -ev
+
+environment=$1 && shift
+
+access_var="${environment}_access_key"
+secret_var="${environment}_secret_key"
+
+export TF_VAR_access_key=${!access_var}
+export TF_VAR_secret_key=${!secret_var}
+export TF_VAR_environment_name=$environment
+
+rm -rf .terraform *.tfstate*
+
+terraform remote config -backend=s3 -backend-config="bucket=edh-terraform-state" -backend-config="region=us-east-1" -backend-config="key=plain-logging-health-${environment}"
+terraform plan -input=false -out=plain_logging_health_${environment}.plan
+
+[[ ${BUILDKITE[@]} ]] && buildkite-agent artifact upload "*.plan"

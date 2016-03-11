@@ -1,0 +1,21 @@
+require('dotenv-safe').load({
+  sample: './.env.requirements',
+  path: './.env.test'
+});
+
+global._ = require('lodash');
+global.chai = require('chai');
+global.expect = chai.expect;
+global.sinon = require('sinon');
+global.Promise = require('bluebird');
+global.mockrequire = require('mockrequire');
+
+global.mkdirp = Promise.promisify(require('mkdirp'));
+global.path = require('path');
+global.rimraf = Promise.promisify(require('rimraf'));
+global.url = require('url');
+
+chai.use(require('sinon-chai'));
+chai.use(require('chai-json-schema'));
+chai.use(require('chai-as-promised'));
+require('sinon-as-promised')(global.Promise);

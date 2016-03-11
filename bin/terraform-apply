@@ -1,0 +1,24 @@
+#!/bin/bash -ev
+
+environment=$1 && shift
+
+access_var="${environment}_access_key"
+secret_var="${environment}_secret_key"
+
+export TF_VAR_access_key=${!access_var}
+export TF_VAR_secret_key=${!secret_var}
+export TF_VAR_environment_name=$environment
+
+plan=plain_logging_health_${environment}.plan
+
+[[ ${BUILDKITE[@]} ]] && buildkite-agent artifact download "*.plan" .
+[[ ${BUILDKITE[@]} ]] && buildkite-agent artifact download "artifacts/${RELEASE_ENVIRONMENT}.zip" .
+mv "artifacts/${RELEASE_ENVIRONMENT}.zip" release.zip
+
+if [ -f $plan ]; then
+  terraform apply -input=false $plan
+else
+  echo "Nothing to do"
+fi
+
+AWS_ACCESS_KEY_ID=${!access_var} AWS_SECRET_ACCESS_KEY=${!secret_var} aws lambda update-function-code --function-name plain_logging_health --zip-file fileb://./release.zip

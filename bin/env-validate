@@ -1,0 +1,4 @@
+#!/bin/bash -ei
+
+bin/env-subset $RELEASE_ENVIRONMENT > .env
+node validate-env

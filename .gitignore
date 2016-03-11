@@ -1,0 +1,14 @@
+*.log
+.DS_Store
+.env
+.terraform
+.dist-templates
+.tmp
+.deprc
+admin.env
+artifacts/*.zip
+coverage
+dist/*
+logs
+node_modules
+npm-debug.log

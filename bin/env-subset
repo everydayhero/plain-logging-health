@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+prefix=$1 && shift
+
+env | grep $prefix | sed s/^${prefix}_//g

@@ -1,0 +1,95 @@
+steps:
+  - name: ":hammer: Build app image"
+    command: "docker-compose build app"
+
+  - wait
+
+  - name: ":deciduous_tree: Validate staging .env"
+    command: "docker-compose run app bash bin/env-validate"
+    env:
+      RELEASE_ENVIRONMENT: "STAGING"
+
+  - wait
+
+  - name: ":deciduous_tree: Validate production .env"
+    command: "docker-compose run app bash bin/env-validate"
+    env:
+      RELEASE_ENVIRONMENT: "PRODUCTION"
+
+  - wait
+
+  - name: ":mag: Unit tests"
+    command: "docker-compose run app npm test"
+
+  - wait
+
+  - name: ":email: Update codeclimate coverage"
+    command: "docker-compose run app npm run coverage"
+    branches: "master"
+
+  - wait
+
+  - name: ":package: Create release (staging)"
+    command: "bin/create-release"
+    env:
+      RELEASE_ENVIRONMENT: "STAGING"
+
+  - wait
+
+  - name: ":clipboard: Terraform plan (staging)"
+    command: "bin/terraform-plan staging"
+    agents:
+      - queue=native
+    env:
+      RELEASE_ENVIRONMENT: "STAGING"
+
+  - name: ":rocket: Release staging"
+    type: "manual"
+
+  - name: ":s3: Upload assets (staging)"
+    command: "bin/upload-assets staging"
+    env:
+      RELEASE_ENVIRONMENT: "STAGING"
+
+  - wait
+
+  - name: ":earth_asia: Terraform apply (staging)"
+    command: "bin/terraform-apply staging"
+    agents:
+      - queue=native
+    env:
+      RELEASE_ENVIRONMENT: "STAGING"
+
+  - wait
+
+  - name: ":package: Create release (production)"
+    command: "bin/create-release"
+    env:
+      RELEASE_ENVIRONMENT: "PRODUCTION"
+
+  - wait
+
+  - name: ":clipboard: Terraform plan (production)"
+    command: "bin/terraform-plan production"
+    agents:
+      - queue=native
+    env:
+      RELEASE_ENVIRONMENT: "PRODUCTION"
+
+  - name: ":rocket: Release production"
+    type: "manual"
+    branches: "master"
+
+  - name: ":s3: Upload assets (production)"
+    command: "bin/upload-assets production"
+    env:
+      RELEASE_ENVIRONMENT: "PRODUCTION"
+
+  - wait
+
+  - name: ":earth_asia: Terraform apply (production)"
+    command: "bin/terraform-apply production"
+    agents:
+      - queue=native
+    env:
+      RELEASE_ENVIRONMENT: "PRODUCTION"
