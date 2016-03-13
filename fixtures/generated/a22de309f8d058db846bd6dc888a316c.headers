@@ -1,0 +1,12 @@
+{
+  "timeout": true,
+  "time": 0,
+  "url": "https://api.github.com:443/repos/request/request",
+  "request": {
+    "method": "GET",
+    "headers": {
+      "User-Agent": "request",
+      "host": "api.github.com"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "timeout": true,
+  "time": 0,
+  "url": "https://kibana.everydayhero-staging.io:443/elasticsearch/_search",
+  "request": {
+    "method": "POST",
+    "headers": {
+      "Accept": "application/json",
+      "host": "kibana.everydayhero-staging.io",
+      "authorization": "Basic ZXZlcnlkYXloZXJvOlh9V2JKOURHKThyVFQoZ052WzJjKnEyMit5PV12SzMqNyhhOXVQTEI0RThjYnp4emlz"
+    }
+  }
+}

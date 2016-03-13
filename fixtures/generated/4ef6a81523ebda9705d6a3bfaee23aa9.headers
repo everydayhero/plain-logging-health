@@ -1,0 +1,24 @@
+{
+  "statusCode": 403,
+  "headers": {
+    "content-type": "application/json; charset=utf-8",
+    "date": "Sat, 12 Mar 2016 23:10:40 GMT",
+    "etag": "W/\"14-88764704\"",
+    "server": "nginx",
+    "vary": "Accept-Encoding",
+    "x-request-id": "ajdkc96cs3eknas20qrg",
+    "content-length": "20",
+    "connection": "keep-alive"
+  },
+  "url": "https://kibana.everydayhero-staging.io:443/elasticsearch/_search",
+  "time": 1914,
+  "request": {
+    "method": "POST",
+    "headers": {
+      "Accept": "application/json",
+      "host": "kibana.everydayhero-staging.io",
+      "authorization": "Basic ZXZlcnlkYXloZXJvOlh9V2JKOURHKThyVFQoZ052WzJjKnEyMit5PV12SzMqNyhhOXVQTEI0RThjYnp4emlz",
+      "content-length": 0
+    }
+  }
+}

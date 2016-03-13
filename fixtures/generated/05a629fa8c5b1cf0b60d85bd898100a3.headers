@@ -1,0 +1,24 @@
+{
+  "statusCode": 200,
+  "headers": {
+    "content-type": "text/xml;charset=UTF-8",
+    "transfer-encoding": "chunked",
+    "vary": "Accept-Encoding",
+    "date": "Sat, 12 Mar 2016 05:38:14 GMT",
+    "server": "AmazonEC2"
+  },
+  "url": "https://ec2.us-east-1.amazonaws.com:443/",
+  "time": 3207,
+  "request": {
+    "method": "POST",
+    "headers": {
+      "User-Agent": "aws-sdk-nodejs/2.2.43 darwin/v0.10.36",
+      "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+      "X-Amz-Content-Sha256": "7371039207d67c4be2f6abbb39dcd980a6861eef125be9b5437a5f5308278f8c",
+      "Content-Length": 43,
+      "Host": "ec2.us-east-1.amazonaws.com",
+      "X-Amz-Date": "20160312T053812Z",
+      "Authorization": "AWS4-HMAC-SHA256 Credential=AKIAJVVDSKJM46TU67TQ/20160312/us-east-1/ec2/aws4_request, SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=c36101a157b21ba005497fb99edcd19017fbccf1be51f154f2d3ff484b24b923"
+    }
+  }
+}

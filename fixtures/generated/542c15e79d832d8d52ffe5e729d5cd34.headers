@@ -1,0 +1,27 @@
+{
+  "statusCode": 200,
+  "headers": {
+    "access-control-allow-origin": "*",
+    "content-type": "application/json; charset=UTF-8",
+    "date": "Sat, 12 Mar 2016 23:36:39 GMT",
+    "server": "nginx",
+    "vary": "Accept-Encoding",
+    "x-app-name": "kibana",
+    "x-request-id": "ajdko5ob2343mcm69vbg",
+    "content-length": "2583",
+    "connection": "keep-alive"
+  },
+  "url": "https://kibana.everydayhero-staging.io:443/elasticsearch/_search",
+  "time": 1636,
+  "request": {
+    "method": "POST",
+    "headers": {
+      "Accept": "application/json",
+      "kbn-xsrf-token": "kibana",
+      "host": "kibana.everydayhero-staging.io",
+      "authorization": "Basic ZXZlcnlkYXloZXJvOlh9V2JKOURHKThyVFQoZ052WzJjKnEyMit5PV12SzMqNyhhOXVQTEI0RThjYnp4emlz",
+      "content-type": "application/json",
+      "content-length": 176
+    }
+  }
+}
