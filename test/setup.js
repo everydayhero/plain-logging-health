@@ -8,7 +8,6 @@ global.chai = require('chai');
 global.expect = chai.expect;
 global.mockrequire = require('mockrequire');
 global.Promise = require('bluebird');
-global.sepia = require('sepia');
 global.sinon = require('sinon');
 
 global.mkdirp = Promise.promisify(require('mkdirp'));
