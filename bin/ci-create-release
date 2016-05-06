@@ -1,4 +1,13 @@
 #!/bin/bash -ei
 
-docker-compose run app npm run gulp
-[[ ${BUILDKITE[@]} ]] && buildkite-agent artifact upload "artifacts/${RELEASE_ENVIRONMENT}.zip"
+set -euo pipefail
+
+main(){
+  docker pull "${DOCKER_REPOSITORY}:${COMMIT}"
+
+  isolated-docker-compose run app npm run gulp
+
+  [[ ${BUILDKITE[@]} ]] && buildkite-agent artifact upload "artifacts/${RELEASE_ENVIRONMENT}.zip"
+}
+
+. "$BIN_DIR/ci-subr"
