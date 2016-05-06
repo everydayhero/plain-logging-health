@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_event_rule" "logging_health_event" {
   name = "logging_health_event"
   description = "Run scheduled event for logging health lambda"
-  schedule_expression = "rate(5 minutes)"
+  schedule_expression = "rate(60 minutes)"
 }
 
 resource "aws_cloudwatch_event_target" "cloudwatch_logging_health_lambda" {
