@@ -38,7 +38,7 @@ resource "aws_iam_role_policy" "plain_logging_health_lambda_policy" {
         "ec2:*"
       ],
       "Effect": "Allow",
-      "Resource": "arn:aws:ec2:*:*:*",
+      "Resource": "arn:aws:ec2:*:*:*"
     }
   ]
 }
