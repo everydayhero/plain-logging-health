@@ -10,7 +10,9 @@
     "lodash": "^3.10.1",
     "moment": "^2.12.0",
     "raven": "^0.10.0",
-    "request": "^2.69.0"
+    "request": "^2.69.0",
+    "slack-node": "^0.2.0",
+    "superagent": "^1.8.3"
   },
   "devDependencies": {
     "babel": "^6.0.14",
@@ -34,17 +36,18 @@
     "path": "^0.12.7",
     "rimraf": "^2.4.3",
     "run-sequence": "^1.1.4",
-    "sepia": "^2.0.1",
     "sinon": "^1.17.2",
     "sinon-as-promised": "^4.0.0",
-    "sinon-chai": "^2.8.0"
+    "sinon-chai": "^2.8.0",
+    "snazzy": "^4.0.0",
+    "standard": "^7.0.1"
   },
   "scripts": {
     "coverage": "istanbul cover _mocha -- test --require test/setup.js && codeclimate-test-reporter < coverage/lcov.info",
     "gulp": "node_modules/.bin/gulp",
     "dev": "node app.js",
     "start": "node app.js",
-    "pretest": "eslint lib test handlers.js app.js",
+    "pre2test": "node_modules/.bin/standard --verbose | snazzy",
     "test": "node_modules/.bin/mocha test --require test/setup.js"
   },
   "config": {},

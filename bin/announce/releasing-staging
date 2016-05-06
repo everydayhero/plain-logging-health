@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cat <<EOF
+[<${BUILD_URL}|${APP} #${BUILD_NUMBER}>] :rocket: Releasing to staging...
+EOF

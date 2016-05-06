@@ -1,43 +1,55 @@
 steps:
-  - name: ":hammer: Build app image"
-    command: "docker-compose build app"
+  - name: ":docker:"
+    command: "bin/buildkite bin/ci build"
+    agents:
+      queue: native
 
   - wait
 
-  - name: ":deciduous_tree: Validate staging .env"
-    command: "docker-compose run app bash bin/env-validate"
+  - name: ":deciduous_tree: Validate .env (staging)"
+    command: "bin/buildkite bin/ci run bin/exec-env-validate"
+    agents:
+      - queue=native
     env:
       RELEASE_ENVIRONMENT: "STAGING"
 
   - wait
 
-  - name: ":deciduous_tree: Validate production .env"
-    command: "docker-compose run app bash bin/env-validate"
+  - name: ":deciduous_tree: Validate .env (production)"
+    command: "bin/buildkite bin/ci run bin/exec-env-validate"
+    agents:
+      - queue=native
     env:
       RELEASE_ENVIRONMENT: "PRODUCTION"
 
   - wait
 
-  - name: ":mag: Unit tests"
-    command: "docker-compose run app npm test"
+  - name: ":mag:"
+    command: "bin/buildkite bin/ci run 'npm test'"
+    agents:
+      - queue=native
 
   - wait
 
-  - name: ":email: Update codeclimate coverage"
-    command: "docker-compose run app npm run coverage"
+  - name: ":triangular_flag_on_post:"
+    command: "bin/buildkite bin/ci run 'npm run coverage'"
     branches: "master"
+    agents:
+      - queue=native
 
   - wait
 
   - name: ":package: Create release (staging)"
-    command: "bin/create-release"
+    command: "bin/buildkite bin/ci create-release"
+    agents:
+      - queue=native
     env:
       RELEASE_ENVIRONMENT: "STAGING"
 
   - wait
 
-  - name: ":clipboard: Terraform plan (staging)"
-    command: "bin/terraform-plan staging"
+  - name: ":clipboard:"
+    command: "bin/ci-terraform-plan staging"
     agents:
       - queue=native
     env:
@@ -46,15 +58,16 @@ steps:
   - name: ":rocket: Release staging"
     type: "manual"
 
-  - name: ":s3: Upload assets (staging)"
-    command: "bin/upload-assets staging"
-    env:
-      RELEASE_ENVIRONMENT: "STAGING"
+  - name: ":speech_balloon:"
+    command: "bin/buildkite bin/ci announce releasing-staging"
+    branches: "master release/*"
+    agents:
+      - queue=native
 
   - wait
 
-  - name: ":earth_asia: Terraform apply (staging)"
-    command: "bin/terraform-apply staging"
+  - name: ":earth_asia:"
+    command: "bin/ci-terraform-apply staging"
     agents:
       - queue=native
     env:
@@ -63,33 +76,52 @@ steps:
   - wait
 
   - name: ":package: Create release (production)"
-    command: "bin/create-release"
+    command: "bin/buildkite bin/ci create-release"
+    agents:
+      - queue=native
     env:
       RELEASE_ENVIRONMENT: "PRODUCTION"
 
   - wait
 
-  - name: ":clipboard: Terraform plan (production)"
-    command: "bin/terraform-plan production"
+  - name: ":clipboard:"
+    command: "bin/ci-terraform-plan production"
     agents:
       - queue=native
     env:
       RELEASE_ENVIRONMENT: "PRODUCTION"
+
+  - wait
+
+  - name: ":speech_balloon:"
+    command: "bin/buildkite bin/ci announce ready-to-release-production"
+    branches: "master release/*"
+    agents:
+      - queue=native
 
   - name: ":rocket: Release production"
     type: "manual"
     branches: "master"
 
-  - name: ":s3: Upload assets (production)"
-    command: "bin/upload-assets production"
+  - name: ":speech_balloon:"
+    command: "bin/buildkite bin/ci announce releasing-production"
+    branches: "master release/*"
+    agents:
+      - queue=native
+
+  - wait
+
+  - name: ":earth_asia:"
+    command: "bin/ci-terraform-apply production"
+    agents:
+      - queue=native
     env:
       RELEASE_ENVIRONMENT: "PRODUCTION"
 
   - wait
 
-  - name: ":earth_asia: Terraform apply (production)"
-    command: "bin/terraform-apply production"
+  - name: ":speech_balloon:"
+    command: "bin/buildkite bin/ci announce released-production"
+    branches: "master release/*"
     agents:
       - queue=native
-    env:
-      RELEASE_ENVIRONMENT: "PRODUCTION"

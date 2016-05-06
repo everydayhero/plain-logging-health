@@ -1,58 +1,104 @@
 'use strict'
 
-var fetchLogs = require('../lib/fetchLogs');
-var moment = require('moment');
-var clock = moment.utc('2016-03-12T23:15:00+00:00');
+var moment = require('moment')
+
+var mockRequest = sinon.stub()
+var mockMoment = {
+  utc: sinon.stub(),
+  duration: sinon.stub(),
+  ISO_8601: sinon.stub()
+}
+
+var fetchLogs = mockrequire('../lib/fetchLogs', {
+  'request': mockRequest,
+  'moment': mockMoment
+})
 
 describe('fetchLogs', function() {
+
+  var mockTimestamp = '2016-05-06T03:35:30+00:00'
+  var now = moment.utc()
+  var latency = moment.duration(now.diff(mockTimestamp))
+
+  beforeEach(function() {
+    mockMoment.utc.returns(now)
+    mockMoment.ISO_8601.returns(false)
+    mockMoment.duration.returns(latency)
+  })
+
   describe('when logs exist', function() {
-    it('enriches the input object with information about recent kibana logs', function() {
-      this.timeout(5000);
+    it('enriches the input object with information about recent kibana logs', function () {
+
+      var mockLogId = 'AVSEIwl27uQ1F-AdIWZL'
+      var mockResponse = {
+        toJSON: sinon.stub().returns({
+          body: {
+            hits: {
+              hits: [{
+                _id: mockLogId,
+                _source: {
+                  '@timestamp': mockTimestamp
+                }
+              }]
+            }
+          }
+        })
+      }
+      mockRequest.callsArgWith(1, null, mockResponse)
 
       var input = {
-        id: 'i-0fba13b9',
-        name: 'staging-a-clock-0fba13b9'
-      };
+        id: 'i-31f1acb5',
+        name: 'staging-a-buildkite-31f1acb5'
+      }
 
       var expectedOutput = {
-        'id': 'i-0fba13b9',
+        'id': input.id,
         'lastEntry': {
-          'createdAt': '2016-03-12T23:14:33+00:00',
-          'id': 'AVNtHGNSbelSLPRvDRrA',
-          'latencyHuman': 'a few seconds',
-          'latencySeconds': 27
+          'createdAt': now.format(),
+          'id': mockLogId,
+          'latencyHuman': latency.humanize(),
+          'latencySeconds': latency.asSeconds()
         },
-        'name': 'staging-a-clock-0fba13b9',
-        'searchedAt': '2016-03-12T23:15:00+00:00'
-      };
+        'name': input.name,
+        'searchedAt': now.format()
+      }
 
-      return fetchLogs(input, clock)
-        .then(function(output) {
-          expect(output).to.eql(expectedOutput);
+      return fetchLogs(input)
+        .then(function (output) {
+          expect(output).to.eql(expectedOutput)
         })
-    });
-  });
+    })
+  })
 
-  describe('when logs do not exist', function() {
-    it('enriches the input object accordingly', function() {
-      this.timeout(5000);
-
+  describe('when logs do not exist', function () {
+    it('enriches the input object accordingly', function () {
       var input = {
         id: 'i-000',
         name: 'staging-x-never-000'
-      };
+      }
+
+      var mockNoLogsResponse = {
+        toJSON: sinon.stub().returns({
+          body: {
+            hits: {
+              hits: []
+            }
+          }
+        })
+      }
+      mockRequest.callsArgWith(1, null, mockNoLogsResponse)
 
       var expectedOutput = {
-        'id': 'i-000',
+        'id': input.id,
         'lastEntry': null,
-        'name': 'staging-x-never-000',
-        'searchedAt': '2016-03-12T23:15:00+00:00'
-      };
+        'name': input.name,
+        'searchedAt': now.format()
+      }
 
-      return fetchLogs(input, clock)
+      return fetchLogs(input)
         .then(function(output) {
-          expect(output).to.eql(expectedOutput);
+          expect(output).to.eql(expectedOutput)
         })
-    });
-  });
-});
+    })
+  })
+})

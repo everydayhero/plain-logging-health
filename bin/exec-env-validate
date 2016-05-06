@@ -1,0 +1,6 @@
+#!/bin/bash -ei
+
+set -euo pipefail
+
+bin/env-subset $RELEASE_ENVIRONMENT > .env
+node validate-env

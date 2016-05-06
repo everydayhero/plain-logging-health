@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -eo pipefail
+
+main(){
+  docker pull "${DOCKER_REPOSITORY}:${COMMIT}"
+
+  prebuild
+  isolated-docker-compose build app
+  postbuild
+  isolated-docker-compose run app $1
+}
+
+. "$BIN_DIR/ci-subr"

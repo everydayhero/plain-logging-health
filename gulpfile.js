@@ -18,24 +18,30 @@ gulp.task('clean', function() {
 gulp.task('copy', function() {
   return gulp.src([
     './handlers.js',
+    './environment.js',
     './.env.requirements',
-    './lib/**/*',
+    './lib/**/*'
   ], {
     base: './'
   }).pipe(gulp.dest('dist/'))
 });
 
-gulp.task('dotenv', function (cb) {
-  exec('./bin/env-subset ' + currentEnvironment + ' > ./dist/.env', function (err, stdout, stderr) {
-    cb(err);
-  });
+gulp.task('dotenv', (cb) => {
+  const commands = [
+    './bin/env-subset ' + currentEnvironment + ' > ./dist/.env',
+    'echo "RELEASE_ENVIRONMENT=' + currentEnvironment + '" >> ./dist/.env'
+  ]
+  exec(commands.join(' && '), (err, stdout, stderr) => cb(err))
 })
 
-gulp.task('npm', function() {
-  return gulp.src('./package.json')
+gulp.task('npm:copy-modules', () => {
+  return gulp.src(['./node_modules/**/*', './package.json'], { base: './' })
     .pipe(gulp.dest('./dist/'))
-    .pipe(install({ production: true }));
-});
+})
+
+gulp.task('npm:install-prune', (cb) => {
+  exec('cd dist && npm install --production && npm prune --production', (err, stdout, stderr) => cb(err))
+})
 
 gulp.task('zip', function() {
   return gulp.src(
@@ -52,8 +58,8 @@ gulp.task('zip', function() {
 gulp.task('default', function(cb) {
   return runSequence(
     ['clean'],
-    ['build:templates'],
-    ['copy', 'npm'],
+    ['copy', 'npm:copy-modules'],
+    ['npm:install-prune'],
     ['dotenv'],
     ['zip'],
     cb

@@ -1,8 +1,0 @@
-{
-  "url": "https://kibana.everydayhero.io:443/elasticsearch/",
-  "method": "GET",
-  "headers": {
-    "host": "kibana.everydayhero.io"
-  },
-  "body": ""
-}

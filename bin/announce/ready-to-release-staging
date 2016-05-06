@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cat <<EOF
+[<${BUILD_URL}|${APP} #${BUILD_NUMBER}>] :thumbsup: Ready to release staging
+EOF
