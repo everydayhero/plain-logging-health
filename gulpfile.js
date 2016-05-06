@@ -26,21 +26,25 @@ gulp.task('copy', function() {
   }).pipe(gulp.dest('dist/'))
 });
 
-gulp.task('dotenv', (cb) => {
+gulp.task('dotenv', function (cb) {
   const commands = [
     './bin/env-subset ' + currentEnvironment + ' > ./dist/.env',
     'echo "RELEASE_ENVIRONMENT=' + currentEnvironment + '" >> ./dist/.env'
   ]
-  exec(commands.join(' && '), (err, stdout, stderr) => cb(err))
+  exec(commands.join(' && '), function (err, stdout, stderr) {
+    cb(err)
+  })
 })
 
-gulp.task('npm:copy-modules', () => {
+gulp.task('npm:copy-modules', function () {
   return gulp.src(['./node_modules/**/*', './package.json'], { base: './' })
     .pipe(gulp.dest('./dist/'))
 })
 
-gulp.task('npm:install-prune', (cb) => {
-  exec('cd dist && npm install --production && npm prune --production', (err, stdout, stderr) => cb(err))
+gulp.task('npm:install-prune', function (cb) {
+  exec('cd dist && npm install --production && npm prune --production', function (err, stdout, stderr) {
+    cb(err)
+  })
 })
 
 gulp.task('zip', function() {
