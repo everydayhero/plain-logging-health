@@ -35,10 +35,10 @@ resource "aws_iam_role_policy" "plain_logging_health_lambda_policy" {
     },
     {
       "Action": [
-        "ec2:*"
+        "ec2:Describe*"
       ],
       "Effect": "Allow",
-      "Resource": "*"
+      "Resource": "arn:aws:ec2:us-east-1:*:instance/*"
     }
   ]
 }
