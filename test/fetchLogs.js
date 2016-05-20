@@ -1,36 +1,34 @@
 'use strict'
 
-var moment = require('moment')
+import moment from 'moment'
 
-var mockRequest = sinon.stub()
-var mockMoment = {
+const mockRequest = sinon.stub()
+const mockMoment = {
   utc: sinon.stub(),
   duration: sinon.stub(),
   ISO_8601: sinon.stub()
 }
 
-var fetchLogs = mockrequire('../lib/fetchLogs', {
+const fetchLogs = mockrequire('../lib/fetchLogs', {
   'request': mockRequest,
   'moment': mockMoment
 })
 
-describe('fetchLogs', function() {
+describe('fetchLogs', () => {
+  const mockTimestamp = '2016-05-06T03:35:30+00:00'
+  const now = moment.utc()
+  const latency = moment.duration(now.diff(mockTimestamp))
 
-  var mockTimestamp = '2016-05-06T03:35:30+00:00'
-  var now = moment.utc()
-  var latency = moment.duration(now.diff(mockTimestamp))
-
-  beforeEach(function() {
+  beforeEach(() => {
     mockMoment.utc.returns(now)
     mockMoment.ISO_8601.returns(false)
     mockMoment.duration.returns(latency)
   })
 
-  describe('when logs exist', function() {
-    it('enriches the input object with information about recent kibana logs', function () {
-
-      var mockLogId = 'AVSEIwl27uQ1F-AdIWZL'
-      var mockResponse = {
+  describe('when logs exist', () => {
+    it('enriches the input object with information about recent kibana logs', () => {
+      const mockLogId = 'AVSEIwl27uQ1F-AdIWZL'
+      const mockResponse = {
         toJSON: sinon.stub().returns({
           body: {
             hits: {
@@ -46,12 +44,12 @@ describe('fetchLogs', function() {
       }
       mockRequest.callsArgWith(1, null, mockResponse)
 
-      var input = {
+      const input = {
         id: 'i-31f1acb5',
         name: 'staging-a-buildkite-31f1acb5'
       }
 
-      var expectedOutput = {
+      const expectedOutput = {
         'id': input.id,
         'lastEntry': {
           'createdAt': now.format(),
@@ -64,20 +62,20 @@ describe('fetchLogs', function() {
       }
 
       return fetchLogs(input)
-        .then(function (output) {
+        .then((output) => {
           expect(output).to.eql(expectedOutput)
         })
     })
   })
 
-  describe('when logs do not exist', function () {
-    it('enriches the input object accordingly', function () {
-      var input = {
+  describe('when logs do not exist', () => {
+    it('enriches the input object accordingly', () => {
+      const input = {
         id: 'i-000',
         name: 'staging-x-never-000'
       }
 
-      var mockNoLogsResponse = {
+      const mockNoLogsResponse = {
         toJSON: sinon.stub().returns({
           body: {
             hits: {
@@ -88,7 +86,7 @@ describe('fetchLogs', function() {
       }
       mockRequest.callsArgWith(1, null, mockNoLogsResponse)
 
-      var expectedOutput = {
+      const expectedOutput = {
         'id': input.id,
         'lastEntry': null,
         'name': input.name,
@@ -96,7 +94,7 @@ describe('fetchLogs', function() {
       }
 
       return fetchLogs(input)
-        .then(function(output) {
+        .then((output) => {
           expect(output).to.eql(expectedOutput)
         })
     })

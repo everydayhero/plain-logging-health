@@ -1,10 +1,10 @@
 'use strict'
 
-var mockInstances = [
+const mockInstances = [
   {InstanceId: 'mockid', Tags: [{Key: 'Name', Value: 'mockName'}]},
   {InstanceId: 'mockid2', Tags: [{Key: 'Name', Value: 'mockName2'}]}
 ]
-var mockDescribeResult = {
+const mockDescribeResult = {
   data: {
     Reservations: [
       {Instances: [mockInstances[0]]},
@@ -12,12 +12,12 @@ var mockDescribeResult = {
     ]
   }
 }
-var mockDescribeOn = sinon.stub()
-var mockDescribe = sinon.stub().returns({
+const mockDescribeOn = sinon.stub()
+const mockDescribe = sinon.stub().returns({
   on: mockDescribeOn.returns(mockDescribe)
 })
 
-var mockAWS = {
+const mockAWS = {
   EC2: function () {
     return {
       describeInstances: mockDescribe
@@ -25,22 +25,22 @@ var mockAWS = {
   }
 }
 
-var fetchHosts = mockrequire('../lib/fetchHosts', {
+const fetchHosts = mockrequire('../lib/fetchHosts', {
   'aws-sdk': mockAWS
 })
 
-var expectedEc2Hosts = [
+const expectedEc2Hosts = [
   { id: mockInstances[0].InstanceId, name: mockInstances[0].Tags[0].Value },
   { id: mockInstances[1].InstanceId, name: mockInstances[1].Tags[0].Value }
 ]
 
-describe('fetchHosts', function() {
-  it('returns an array of EC2 hosts with the bastion-access group', function() {
+describe('fetchHosts', () => {
+  it('returns an array of EC2 hosts with the bastion-access group', () => {
     mockDescribeOn.withArgs('success').yields(mockDescribeResult)
 
     return fetchHosts()
-      .then(function(result) {
-        expect(_.sortBy(result, 'id')).to.eql(expectedEc2Hosts);
+      .then((result) => {
+        expect(_.sortBy(result, 'id')).to.eql(expectedEc2Hosts)
       })
-  });
-});
+  })
+})

@@ -1,3 +1,3 @@
-'use strict';
+'use strict'
 
-require('dotenv-safe').load({ sample: './.env.requirements' });
+require('dotenv-safe').load({ sample: './.env.requirements' })

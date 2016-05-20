@@ -34,7 +34,7 @@
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.3",
     "mock-fs": "^3.7.0",
-    "mockrequire": "benoneal/mockrequire#0.0.9",
+    "mockrequire": "benoneal/mockrequire#0.0.11",
     "path": "^0.12.7",
     "rimraf": "^2.4.3",
     "run-sequence": "^1.1.4",
@@ -50,12 +50,24 @@
     ],
     "plugins": ["add-module-exports"]
   },
+  "standard": {
+    "globals": [
+      "_",
+      "describe",
+      "sinon",
+      "mockrequire",
+      "it",
+      "expect",
+      "before",
+      "beforeEach"
+    ]
+  },
   "scripts": {
     "coverage": "istanbul cover _mocha -- test --require test/setup.js && codeclimate-test-reporter < coverage/lcov.info",
     "gulp": "node_modules/.bin/gulp",
     "dev": "node app.js",
     "start": "node app.js",
-    "pre2test": "node_modules/.bin/standard --verbose | snazzy",
+    "pretest": "node_modules/.bin/standard --verbose | snazzy",
     "test": "node_modules/.bin/mocha test --require test/setup.js"
   },
   "config": {},
