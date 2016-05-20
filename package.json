@@ -30,11 +30,11 @@
     "gulp-install": "^0.6.0",
     "gulp-util": "^3.0.7",
     "gulp-zip": "^3.0.2",
-    "istanbul": "^0.4.0",
     "mkdirp": "^0.5.1",
     "mocha": "^2.3.3",
     "mock-fs": "^3.7.0",
     "mockrequire": "benoneal/mockrequire#0.0.11",
+    "nyc": "^6.4.4",
     "path": "^0.12.7",
     "rimraf": "^2.4.3",
     "run-sequence": "^1.1.4",
@@ -48,7 +48,9 @@
     "presets": [
       "es2015"
     ],
-    "plugins": ["add-module-exports"]
+    "plugins": [
+      "add-module-exports"
+    ]
   },
   "standard": {
     "globals": [
@@ -62,8 +64,13 @@
       "beforeEach"
     ]
   },
+  "nyc": {
+    "exclude": [
+      "test"
+    ]
+  },
   "scripts": {
-    "coverage": "istanbul cover _mocha -- test --require test/setup.js && codeclimate-test-reporter < coverage/lcov.info",
+    "coverage": "nyc npm test && nyc report --reporter=lcov && codeclimate-test-reporter < coverage/lcov.info",
     "gulp": "node_modules/.bin/gulp",
     "dev": "node app.js",
     "start": "node app.js",
