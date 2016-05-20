@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-(() => {
-  var dotenvSave = require('dotenv-safe')
+(function () {
+  var dotenvSafe = require('dotenv-safe')
   if (!module.parent) {
-    dotenvSave.load({ sample: process.argv[2] || './.env.requirements' })
+    dotenvSafe.load({ sample: process.argv[2] || './.env.requirements' })
   }
 })()
