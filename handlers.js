@@ -1,15 +1,15 @@
-'use strict';
+'use strict'
 
 require('dotenv-safe').load({
   sample: './.env.requirements'
-});
+})
 
-var health = require('./lib/health.js');
+var health = require('./lib/health.js')
 
 module.exports = {
-  health: function(e, ctx) {
-    health.run(e, ctx)
+  health: (e, ctx) => {
+    health(e, ctx)
       .then(ctx.succeed)
-      .catch(ctx.fail);
+      .catch(ctx.fail)
   }
 }

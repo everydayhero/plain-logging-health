@@ -36,6 +36,10 @@ gulp.task('dotenv', function (cb) {
   })
 })
 
+gulp.task('babel:transpile', (cb) => {
+  exec('node_modules/.bin/babel -d dist/ dist/', (err, stdout, stderr) => cb(err))
+})
+
 gulp.task('npm:copy-modules', function () {
   return gulp.src(['./node_modules/**/*', './package.json'], { base: './' })
     .pipe(gulp.dest('./dist/'))
@@ -62,7 +66,9 @@ gulp.task('zip', function() {
 gulp.task('default', function(cb) {
   return runSequence(
     ['clean'],
-    ['copy', 'npm:copy-modules'],
+    ['copy'],
+    ['babel:transpile'],
+    ['npm:copy-modules'],
     ['npm:install-prune'],
     ['dotenv'],
     ['zip'],
